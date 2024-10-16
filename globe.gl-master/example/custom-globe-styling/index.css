@@ -1,0 +1,585 @@
+body { margin: 0; } 
+@import url(https://db.onlinewebfonts.com/c/1db29588408eadbd4406aae9238555eb?family=Consolas);
+@font-face {
+    font-family: "Consolas";
+    src: url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.eot");
+    src: url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/1db29588408eadbd4406aae9238555eb.svg#Consolas")format("svg");
+}
+body {
+    overflow: hidden;
+  }
+
+.title{
+    position:absolute;
+    z-index: 1;
+    top: 5px;
+    left:20px; 
+    font-family: "Consolas";
+    font-size: 30px;
+}  
+
+#notification-block {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Растянуть на всю ширину */
+  color: #f3acac;
+  padding: 20px;
+  font-family: "Consolas";
+  display: flex;
+  justify-content: center; /* Центрирование уведомлений */
+}
+
+ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+  width: 100%; /* Растянуть на всю ширину контейнера */
+  justify-content: left; /* Центрирование элементов внутри строки */
+}
+
+li {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  padding: 18px;
+  font-size: 28px;
+  width: 14%; /* Ширина для 8 элементов на строке, с учётом отступов */
+  box-sizing: border-box;
+  margin: 10px; /* Отступы между элементами */
+  text-align:center; /* Центрирование текста */
+}
+
+li.visible {
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 1;
+}
+
+.alert-icon {
+  color: #ff5555;
+  margin-right: 10px;
+  z-index: 1;
+}
+.alert-notification {
+    position: absolute;
+    top: 2px;
+    right: 230px;
+    z-index: 2;
+  }
+    /*CountryTable*/ 
+    .container {
+        position: absolute;
+        width: 600px;
+        top: 22%;
+        left: 20px;
+        z-index: 1;
+      }
+      
+      .mprc-container {
+        display: flex; /* Flexbox для выравнивания SVG и текста по горизонтали */
+        align-items: center; /* Центрирование элементов по вертикали */
+        justify-content: space-between; /* Распределение элементов по горизонтали */
+        width: 70%;
+        /*border-style: solid;
+        border-color: darkslateblue;
+        background-color: #4158D0;
+        background-image: url('./.jpeg'), linear-gradient(43deg, #5771f5 0%, #36317a 46%, #252eac 100%);*/
+        background-size: cover; 
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 30px;
+        opacity: 0; /* Начальное состояние для плавного появления */
+        transform: translateX(-100%); /* Исходное положение для выезда */
+        transition: opacity 1s ease, transform 1s ease; /* Плавный переход */
+          box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+          border-radius: 5px;
+          background-color: rgba(255, 255, 255, .15); /*размываем элемент*/
+           -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+      }
+      
+      .mprc-container .svg-container {
+        flex: 0 0 30%;
+        min-width: 100px;
+      }
+      
+      .mprc-container .text-container {
+        flex: 1;
+        padding-left: 10px;
+      }
+      
+      .mprc-container.fade-in {
+        opacity: 1;
+        transform: translateX(0); 
+      }
+      
+      .mprc-container.fade-out {
+        opacity: 0;
+        transform: translateX(100%); 
+      }
+      
+      .mprc-container * {
+        z-index: 1;
+      }
+      
+      h2{
+          font-family: "Consolas";
+          font-size: 30px;
+          color:#fff;
+          font-weight: 500;
+      }
+      .mprc-this-month,
+      .mprc-high-price {
+        font-family: "Consolas";  
+        display: block;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      .mprc-this-month {
+        color:#ff9f00;
+        font-size: 32px;
+        font-weight: 500;
+        font-family: "Consolas";
+      }
+      
+      .mprc-high-price {
+        font-size: 20px;
+        color:#fff;
+        font-weight: 500;
+        font-family: "Consolas";
+      }
+      
+      .mprc-month-year {
+        font-size: 30px;
+        color:#fff;
+        font-weight: 500;
+        font-family: "Consolas";
+      }
+      
+      /****************************************************/
+      .crht-flex-wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+      }
+      
+      .crht-single-chart {
+        width: 33%;
+        justify-content: space-around;
+      }
+      
+      .crht-circular-chart {
+        display: block;
+        margin: 0px auto;
+        max-width: 100%;
+      }
+      
+      .crht-circle-bg {
+        fill: none;
+        stroke: #eee;
+        stroke-width: 3.8;
+      }
+      
+      .crht-circle {
+        fill: none;
+        stroke-width: 3.8;
+        stroke-linecap: round;
+        animation: crht-progress 3s ease-out forwards;
+      }
+      
+      @keyframes crht-progress {
+        0% {
+          stroke-dasharray: 0 100;
+        }
+      }
+      
+      .crht-circular-chart.orange .crht-circle {
+        stroke: #ff9f00;
+      }
+      
+      .crht-percentage {
+        fill: #fff;
+        font-family: Consolas;
+        font-size: 0.5em;
+        text-anchor: middle;
+      }
+      .fade-in {
+        transform: translateX(100%);
+        opacity: 0;
+        animation: slideIn 1s forwards;
+      }
+      
+      .fade-out {
+        transform: translateX(0);
+        opacity: 1;
+        animation: slideOut 1s forwards;
+      }
+      
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+    /*ALERTBLOG*/
+
+  a {
+    color: #5f89a7;
+    text-decoration: none;
+  }
+  
+  .color-red {
+    stop-color: #e23131;
+  }
+  
+  .color-yellow {
+    stop-color: #fbe500;
+  }
+  
+  .color-green {
+    stop-color: #25cd6b;
+  }
+  
+  .main__title {
+    text-align: center;
+    font-size: 48px;
+    color: white;
+  }
+  
+  .gradient-mask {
+    visibility: hidden;
+  }
+  
+  .gauge-container {
+    padding: 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .gauge {
+    height: 220px;
+    width: 300px;
+  }
+  
+  .gauge .dxg-range.dxg-background-range {
+    fill: url(#gradientGauge);
+  }
+  
+  .gauge .dxg-line {
+    transform: scaleX(1.04) scaleY(1.03) translate(-4px, -4px);
+  }
+  
+  .gauge .dxg-line path:first-child,
+  .gauge .dxg-line path:last-child {
+    display: none;
+  }
+  
+  .gauge .dxg-line path:nth-child(2),
+  .gauge .dxg-line path:nth-child(6) {
+    stroke: #ed811c;
+  }
+  
+  .gauge .dxg-line path:nth-child(3),
+  .gauge .dxg-line path:nth-child(5) {
+    stroke: #a7db29;
+  }
+  
+  .gauge .dxg-line path:nth-child(4) {
+    stroke: #25cd6b;
+  }
+  
+  .gauge .dxg-elements text:first-child {
+    transform: translate(19px, 13px);
+  }
+  
+  .gauge .dxg-elements text:last-child {
+    transform: translate(-27px, 14px);
+  }
+  
+  .gauge .dxg-value-indicator path {
+    transform: scale(1.2) translate(0, -5px);
+    transform-origin: center center;
+  }
+  
+  .gauge .dxg-value-indicator .dxg-title {
+    text-transform: uppercase;
+  }
+  
+  .gauge .dxg-value-indicator .dxg-title text:first-child {
+    transform: translateY(5px);
+  }
+  
+  .gauge .dxg-value-indicator .dxg-spindle-border:nth-child(4),
+  .gauge .dxg-value-indicator .dxg-spindle-hole:nth-child(5) {
+    transform: translate(0, -109px);
+  }
+  
+  .gauge .dxg-value-indicator .dxg-spindle-hole {
+    fill: #26323a;
+  }
+  
+  @-webkit-keyframes grow-width {
+    from {
+      width: 0;
+    }
+  }
+  
+  @keyframes grow-width {
+    from {
+      width: 0;
+    }
+  }
+  
+  .main {
+    width: 300px;
+    padding: 10px 40px 50px;
+    opacity: 0;
+    background: #5d3fccfd;
+    border-radius: 25px;
+    top:22%;
+    left: 25px;
+    z-index: 1;
+    position: absolute;
+    transform: translateX(-100%);
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
+  
+  .main.show {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 1;
+    
+  }
+  
+  .main.fade-out {
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 1s ease-in, opacity 1s ease-in;
+    z-index: 1;
+  }
+  
+  
+  .hidden {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+    z-index: 1;
+  }
+  
+  .visible {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+  }
+  
+  .fade-out {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 1s ease-in, opacity 1s ease-in;
+  }
+  
+  h1, h4 {
+    text-align: center;
+    color: #fdfdfd;
+  }
+  
+  h3 {
+    color: #fdfdfd;
+  }
+  
+  em, span {
+    font-size: 25px;
+  }
+  
+  section {
+    vertical-align: top;
+    margin-top: 20px;
+  }
+  
+  section:nth-of-type(odd) {
+    margin-right: 20px;
+  }
+  
+  .style-1 {
+    list-style-type: none;
+    padding: 0;
+    width: 325px;
+    color: #fdfdfd;
+  }
+  
+  .style-1 li {
+    position: relative;
+    height: 50px;
+    width: 380px;
+  }
+  
+  .style-1 li em, .style-1 li span {
+    display: block;
+    border-bottom: 5px solid #FFE5E5;
+    padding-bottom: 5px;
+  }
+  
+  .style-1 li em {
+    font-style: normal;
+    border-bottom-color: #DB6B6B;
+    position: absolute;
+    overflow: visible;
+    -webkit-animation: grow-width 2s;
+    animation: grow-width 2s;
+  }
+  
+  .style-1 li span {
+    text-align: right;
+  }
+  
+  .alert-container {
+    position: absolute;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 25px;
+    z-index: 1;
+  }
+  
+  .alert1 {
+    position: absolute;
+    top: -165px;
+    right: -240px;
+    z-index: 2;
+  }
+
+  /* NOTIFICATION */
+  #notification-block1 {
+    position: fixed;
+    top: 10px;
+    right: 0px;
+    width:55%;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: Consolas;
+    text-align: center;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+}
+
+/* Контейнер для текстов */
+#container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: url(#threshold) blur(0.6px); /* Фильтр для морфинга */
+}
+
+/* Текстовые элементы для морфинга */
+#text1, #text2 {
+    position: absolute;
+    right: 10px;
+    width: 100%;
+    font-family: "Consolas";
+    font-size: 100px;
+    color: #ffffff;
+    user-select: none;
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, filter 1s ease-in-out; /* Плавный переход */
+}
+
+/* Блок для данных транзакции */
+#transaction-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    padding: 10px;
+    z-index: 2;
+}
+
+.alert {
+    margin-bottom: 10px;
+    padding: 20px;
+    padding-bottom: 40px;
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    font-size: 32px;
+    animation: bounceInRight 1s ease-out forwards, slideUpAndFadeOut 4s ease-out 1s forwards;
+}
+
+.alert-success {
+    border-radius: 5px;
+    color: #ffffff;
+    text-shadow: 2px 1px #00040a;
+  }
+  
+  .alert-danger {
+    border-radius: 5px;
+    color: #ffffff;
+    text-shadow: 2px 1px #00040a;
+  }
+
+.alert .start-icon {
+    margin-right: 10px;
+    font-size: 30px;
+}
+
+@keyframes bounceInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    60% {
+        opacity: 1;
+        transform: translateX(-30px);
+    }
+    80% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideUpAndFadeOut {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    70% {
+        transform: translateY(-500px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-600px);
+        opacity: 0;
+    }
+}
+

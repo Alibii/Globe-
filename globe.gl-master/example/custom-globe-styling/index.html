@@ -1,0 +1,388 @@
+<head>
+  <title>Globe-country Visualization</title>
+  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:900&display=swap">
+  <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/23.1.3/css/dx.light.css">
+  <link href="https://db.onlinewebfonts.com/c/1db29588408eadbd4406aae9238555eb?family=Consolas" rel="stylesheet">
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js'></script>
+  <script src="https://cdn3.devexpress.com/jslib/21.1.7/js/dx.all.js"></script>
+  <script src="//unpkg.com/globe.gl"></script>
+  
+<!--    <script src="../../dist/globe.gl.js"></script>-->
+</head>
+<body>  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="title">
+      <h1><strong>Переводы по странам</strong></h1>
+    </div>
+
+    <div id="notification-block">
+      <ul id="alert-list"></ul>
+    </div>
+
+    <div id="notification-block1">
+      <div id="container">
+          <span id="text1"></span>
+          <span id="text2"></span>
+      </div>
+  </div>
+  <div id="transaction-container"></div>
+
+  <div id="globeViz"></div>
+
+  <main class="main">
+    <div class="alert-container hidden">
+      <div class="alert1">
+        <dotlottie-player src="https://lottie.host/424e771a-30b9-4840-a72a-2c4db993bfc4/TBdmfEkhaS.json"
+          background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></dotlottie-player>
+      </div>
+    </div>
+
+    <div class="gauge-container hidden">
+      <div class="gauge"></div>
+    </div>
+
+    <section class="hidden">
+      <ul class="style-1">
+        <li>
+          <em>Исходящие:</em>
+          <span></span>
+        </li>
+        <li>
+          <em>В среднем исх.</em>
+          <span></span>
+        </li>
+        <li>
+          <em>Исходящие в месяц</em>
+          <span></span>
+        </li>
+        <li>
+          <em>Исходящие на год</em>
+          <span></span>
+        </li>
+      </ul>
+    </section>
+
+    <div class="hidden">
+      <canvas id="myChart"></canvas>
+    </div>
+  </main>
+
+  <svg width="0" height="0" version="1.1" class="gradient-mask" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gradientGauge">
+        <stop class="color-yellow" offset="0%" />
+        <stop class="color-green" offset="70%" />
+        <stop class="color-red" offset="100%" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="container">
+    <!-- <h2>Исходящие транзакции по странам</h2> -->
+    <div class="row flex-column" id="data-container"> 
+    </div>
+  </div>
+  <script type="module">
+    import * as THREE from '//unpkg.com/three/build/three.module.js';
+
+    const coordinates = {
+    "KAZ": { lat: 47.0196, lng: 66.9237 },
+    "AGO": { lat: -9.4295, lng: 17.6983 },
+    "AIA": { lat: 18.2206, lng: -63.0686 },
+    "ALB": { lat: 41.1533, lng: 20.1683 },
+    "AND": { lat: 42.5462, lng: 1.6016 },
+    "ARE": { lat: 23.4241, lng: 53.8478 },
+    "ARG": { lat: -38.4161, lng: -63.6167 },
+    "ARM": { lat: 40.0692, lng: 45.0382 },
+    "AUS": { lat: -25.2744, lng: 133.7751 },
+    "AUT": { lat: 47.5162, lng: 14.5501 },
+    "AZE": { lat: 40.1431, lng: 47.5769 },
+    "BEL": { lat: 50.8503, lng: 4.3517 },
+    "BGD": { lat: 23.685, lng: 90.3563 },
+    "BGR": { lat: 42.7339, lng: 25.4858 },
+    "BHR": { lat: 25.9304, lng: 50.6378 },
+    "BIH": { lat: 43.9159, lng: 17.6791 },
+    "BLR": { lat: 53.7098, lng: 27.9534 },
+    "BLZ": { lat: 17.1899, lng: -88.4976 },
+    "BRA": { lat: -14.2350, lng: -51.9253 },
+    "BRB": { lat: 13.1939, lng: -59.5432 },
+    "BRN": { lat: 4.5353, lng: 114.7277 },
+    "BWA": { lat: -22.3285, lng: 24.6849 },
+    "CAN": { lat: 56.1304, lng: -106.3468 },
+    "CHE": { lat: 46.8182, lng: 8.2275 },
+    "CHL": { lat: -35.6751, lng: -71.5430 },
+    "CHN": { lat: 35.8617, lng: 104.1954 },
+    "CIV": { lat: 7.539989, lng: -5.54708 },
+    "COG": { lat: -0.2280, lng: 15.8277 },
+    "COK": { lat: -21.2361, lng: -159.7777 },
+    "COL": { lat: 4.5709, lng: -74.2973 },
+    "CRI": { lat: 9.7489, lng: -83.7534 },
+    "CUB": { lat: 21.5218, lng: -77.7812 },
+    "CUW": { lat: 12.1784, lng: -68.2385 },
+    "CYM": { lat: 19.3133, lng: -81.2546 },
+    "CYP": { lat: 35.1264, lng: 33.2550 },
+    "CZE": { lat: 49.8175, lng: 15.4730 },
+    "DEU": { lat: 51.1657, lng: 10.4515 },
+    "DNK": { lat: 56.2639, lng: 9.5018 },
+    "DOM": { lat: 18.7357, lng: -70.1627 },
+    "ECU": { lat: -1.8312, lng: -78.1834 },
+    "EGY": { lat: 26.8205, lng: 30.8025 },
+    "ESP": { lat: 40.4637, lng: -3.7492 },
+    "EST": { lat: 58.5953, lng: 25.0136 },
+    "ETH": { lat: 9.1450, lng: 40.4897 },
+    "FIN": { lat: 61.9241, lng: 25.7482 },
+    "FJI": { lat: -17.7134, lng: 178.0650 },
+    "FRA": { lat: 46.6034, lng: 1.8883 },
+    "GBR": { lat: 55.3781, lng: -3.4360 },
+    "GEO": { lat: 42.3154, lng: 43.3569 },
+    "GHA": { lat: 7.1730, lng: -0.2906 },
+    "GIB": { lat: 36.1408, lng: -5.3536 },
+    "GLP": { lat: 16.2650, lng: -61.5500 },
+    "GRC": { lat: 39.0742, lng: 21.8243 },
+    "GTM": { lat: 15.7835, lng: -90.2308 },
+    "GUM": { lat: 13.4443, lng: 144.7937 },
+    "HKG": { lat: 22.3964, lng: 114.1095 },
+    "HRV": { lat: 45.1000, lng: 15.2000 },
+    "HUN": { lat: 47.1625, lng: 19.5033 },
+    "IDN": { lat: -0.7893, lng: 113.9213 },
+    "IND": { lat: 20.5937, lng: 78.9629 },
+    "IRL": { lat: 53.4129, lng: -8.2439 },
+    "IRQ": { lat: 33.2232, lng: 43.6793 },
+    "ISL": { lat: 64.9631, lng: -19.0208 },
+    "ISR": { lat: 31.0461, lng: 34.8516 },
+    "ITA": { lat: 41.8719, lng: 12.5674 },
+    "JOR": { lat: 30.5852, lng: 36.2384 },
+    "JPN": { lat: 36.2048, lng: 138.2529 },
+    "KEN": { lat: -0.0236, lng: 37.9062 },
+    "KGZ": { lat: 41.2044, lng: 74.7661 },
+    "KHM": { lat: 12.5657, lng: 104.9910 },
+    "KOR": { lat: 35.9077, lng: 127.7669 },
+    "KWT": { lat: 29.3759, lng: 47.9774 },
+    "LAO": { lat: 19.8563, lng: 102.4950 },
+    "LBN": { lat: 33.8547, lng: 35.8623 },
+    "LCA": { lat: 13.9094, lng: -60.9780 },
+    "LKA": { lat: 7.8731, lng: 80.7718 },
+    "LTU": { lat: 55.1694, lng: 23.8813 },
+    "LUX": { lat: 49.8153, lng: 6.1296 },
+    "LVA": { lat: 56.8796, lng: 24.6032 },
+    "MAC": { lat: 22.1988, lng: 113.5439 },
+    "MAR": { lat: 31.7917, lng: -7.0926 },
+    "MCO": { lat: 43.7333, lng: 7.4167 },
+    "MDA": { lat: 47.4116, lng: 28.6720 },
+    "MDG": { lat: -18.7669, lng: 46.8691 },
+    "MDV": { lat: 3.2028, lng: 73.2207 },
+    "MEX": { lat: 23.6345, lng: -102.5528 },
+    "MKD": { lat: 41.6086, lng: 21.7453 },
+    "MLT": { lat: 35.9375, lng: 14.3754 },
+    "MNE": { lat: 42.7087, lng: 19.3744 },
+    "MNG": { lat: 46.8625, lng: 103.8467 },
+    "MUS": { lat: -20.348404, lng: 57.552152 },
+    "MYS": { lat: 4.2105, lng: 101.9758 },
+    "NAM": { lat: -22.5597, lng: 17.0832 },
+    "NGA": { lat: 9.0820, lng: 8.6753 },
+    "NIC": { lat: 12.8654, lng: -85.2072 },
+    "NIU": { lat: -19.0500, lng: -169.8500 },
+    "NLD": { lat: 52.1326, lng: 5.2913 },
+    "NOR": { lat: 60.4720, lng: 8.4689 },
+    "NPL": { lat: 28.3949, lng: 84.1240 },
+    "NZL": { lat: -40.9006, lng: 174.8860 },
+    "OMN": { lat: 21.5126, lng: 55.9233 },
+    "PAK": { lat: 30.3753, lng: 69.3451 },
+    "PAN": { lat: 8.9824, lng: -79.5200 },
+    "PER": { lat: -9.1900, lng: -75.0152 },
+    "PHL": { lat: 12.8797, lng: 121.7740 },
+    "POL": { lat: 51.9194, lng: 19.1451 },
+    "PRI": { lat: 18.2208, lng: -66.5901 },
+    "PRT": { lat: 39.3999, lng: -8.2245 },
+    "PRY": { lat: -23.4420, lng: -58.4438 },
+    "PYF": { lat: -17.6797, lng: -149.4068 },
+    "QAT": { lat: 25.2769, lng: 51.5200 },
+    "QZZ": { lat: 0.0000, lng: 0.0000 },
+    "ROM": { lat: 45.9432, lng: 24.9668 },
+    "RUS": { lat: 61.5240, lng: 105.3188 },
+    "RWA": { lat: -1.9403, lng: 29.8739 },
+    "SAU": { lat: 23.8859, lng: 45.0792 },
+    "SGP": { lat: 1.3521, lng: 103.8198 },
+    "SLV": { lat: 13.7942, lng: -88.8965 },
+    "SMR": { lat: 43.9333, lng: 12.4500 },
+    "SPM": { lat: 15.933, lng: -56.071 },
+    "SRB": { lat: 44.0165, lng: 21.0059 },
+    "SUR": { lat: 3.9193, lng: -56.0278 },
+    "SVK": { lat: 48.6690, lng: 19.6990 },
+    "SVN": { lat: 46.1512, lng: 14.9955 },
+    "SWE": { lat: 60.1282, lng: 18.6435 },
+    "SXM": { lat: 18.0708, lng: -63.0501 },
+    "SYC": { lat: -4.6796, lng: 55.4919 },
+    "TCA": { lat: 21.6940, lng: -71.7979 },
+    "THA": { lat: 15.8700, lng: 100.9925 },
+    "TJK": { lat: 38.8610, lng: 71.2761 },
+    "TKM": { lat: 38.9697, lng: 59.5560 },
+    "TUN": { lat: 33.8869, lng: 9.5375 },
+    "TUR": { lat: 38.9637, lng: 35.2433 },
+    "TWN": { lat: 23.6978, lng: 120.9605 },
+    "TZA": { lat: -6.3690, lng: 34.8888 },
+    "UGA": { lat: 1.3733, lng: 32.2903 },
+    "UKR": { lat: 48.3794, lng: 31.1656 },
+    "URY": { lat: -32.5228, lng: -55.7658 },
+    "USA": { lat: 37.0902, lng: -95.7129 },
+    "UZB": { lat: 41.3775, lng: 64.5853 },
+    "VAT": { lat: 41.9029, lng: 12.4534 },
+    "VEN": { lat: 6.4238, lng: -66.5897 },
+    "VGB": { lat: 18.4207, lng: -64.6399 },
+    "VIR": { lat: 18.3358, lng: -64.8963 },
+    "VNM": { lat: 14.0583, lng: 108.2772 },
+    "VUT": { lat: -15.3767, lng: 166.9592 },
+    "ZAF": { lat: -30.5595, lng: 22.9375 },
+    "ZMB": { lat: -13.1339, lng: 27.8493 },
+    "ZWE": { lat: -19.0154, lng: 29.1549 }
+  };
+    const ARC_REL_LEN = 0.4; // relative to whole arc
+    const FLIGHT_TIME = 1000;
+    const NUM_RINGS = 3;
+    const RINGS_MAX_R = 5; // deg
+    const RING_PROPAGATION_SPEED = 5; // deg/sec
+    const INTERVAL_TIME = FLIGHT_TIME * 2; // Time between arcs
+
+
+  async function loadCountries() {
+      const response = await   fetch('../datasets/ne_110m_admin_0_countries.geojson')  ;
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }
+
+    loadCountries().then(countries => {
+      const world = Globe()
+        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+        .hexPolygonsData(countries.features)
+        .hexPolygonResolution(3)
+        .hexPolygonMargin(0.6)
+        .showAtmosphere(true)
+        .atmosphereColor("lightskyblue")
+        .atmosphereAltitude(0.25)
+        .hexPolygonColor((e) => {
+          if (["KAZ"].includes(e.properties.ISO_A3)) {
+            return "rgba(255,255,255, 1)";
+          } else return "rgba(255,255,255, 0.7)";
+        })
+        .onPolygonHover(hoverD => world
+          .polygonAltitude(d => d === hoverD ? 0.12 : 0.06)
+          .polygonCapColor(d => d === hoverD ? 'red' : colorScale(getVal(d)))
+        )
+        //Arcs
+      .arcColor(() => 'darkOrange')
+      .arcDashLength(ARC_REL_LEN)
+      .arcDashGap(2)
+      .arcDashInitialGap(1)
+      .arcDashAnimateTime(FLIGHT_TIME)
+      .arcsTransitionDuration(0)
+      .ringColor(() => t => `rgba(255,100,50,${1-t})`)
+      .ringMaxRadius(RINGS_MAX_R)
+      .ringPropagationSpeed(RING_PROPAGATION_SPEED)
+      .ringRepeatPeriod(FLIGHT_TIME * ARC_REL_LEN / NUM_RINGS)
+        (document.getElementById('globeViz'));
+
+      // custom globe material
+      const globeMaterial = world.globeMaterial();
+      globeMaterial.bumpScale = 10;
+      globeMaterial.color = new THREE.Color(0x3a228a);
+      globeMaterial.emissive = new THREE.Color(0x220038);
+      globeMaterial.emissiveIntensity = 0.6;
+      globeMaterial.shininess = 0.1;
+      
+
+      // Функция для плавного изменения цвета с возвратом
+      function highlightCountry(world, isoCode) {
+        // Устанавливаем красный цвет для текущей страны
+        world.hexPolygonColor((e) => {
+          if (e.properties.ISO_A3 === isoCode) {
+            return "rgba(255,0,0, 1)"; // Красный цвет
+          } else {
+            return "rgba(255,255,255, 0.7)"; // Стандартный цвет
+          }
+        });
+
+        // Через 5 секунд возвращаем страну к исходному цвету
+        setTimeout(() => {
+          world.hexPolygonColor((e) => {
+            if (["KAZ"].includes(e.properties.ISO_A3)) {
+              return "rgba(255,255,255, 1)"; // Вернем исходный цвет Казахстана
+            } else {
+              return "rgba(255,255,255, 0.7)"; // Остальные страны
+            }
+          });
+        }, 5000); // 5 секунд до возврата исходного цвета
+      }
+
+      // Функция плавного показа координат с изменением цвета
+      function showCoordinatesSmoothly(world) {
+        const animationDuration = 2000; // Длительность анимации (в мс)
+        const delayBetweenPoints = 15000; // Задержка между показами (15 секунд)
+
+        Object.keys(coordinates).forEach((country, index) => {
+          setTimeout(() => {
+            const coords = coordinates[country];
+            world.pointOfView({
+              lat: coords.lat,
+              lng: coords.lng,
+              altitude: 2
+            }, animationDuration);
+
+            // Выделяем страну красным цветом
+            highlightCountry(world, country);
+          }, index * delayBetweenPoints);
+        });
+      }
+
+      showCoordinatesSmoothly(world);
+      //arcs
+      const kazakhstanCoords = coordinates["KAZ"];
+    const destinationCountries = Object.keys(coordinates).filter(country => country !== "KAZ");
+    let currentIndex = 0;
+
+    function emitArc() {
+      const destinationCountry = destinationCountries[currentIndex];
+      const { lat: endLat, lng: endLng } = coordinates[destinationCountry];
+      const { lat: startLat, lng: startLng } = kazakhstanCoords;
+
+      // Add and remove arc after 1 cycle
+      const arc = { startLat, startLng, endLat, endLng };
+      world.arcsData([...world.arcsData(), arc]);
+      setTimeout(() => world.arcsData(world.arcsData().filter(d => d !== arc)), FLIGHT_TIME * 2);
+
+      // Add and remove start rings
+      const srcRing = { lat: startLat, lng: startLng };
+      world.ringsData([...world.ringsData(), srcRing]);
+      setTimeout(() => world.ringsData(world.ringsData().filter(r => r !== srcRing)), FLIGHT_TIME * ARC_REL_LEN);
+
+      // Add and remove target rings
+      setTimeout(() => {
+        const targetRing = { lat: endLat, lng: endLng };
+        world.ringsData([...world.ringsData(), targetRing]);
+        setTimeout(() => world.ringsData(world.ringsData().filter(r => r !== targetRing)), FLIGHT_TIME * ARC_REL_LEN);
+      }, FLIGHT_TIME);
+
+      // Update index for next destination
+      currentIndex = (currentIndex + 1) % destinationCountries.length;
+    }
+
+    // Emit arcs at regular intervals
+    setInterval(emitArc, INTERVAL_TIME);
+
+      const directionalLight = world.lights().find(light => light.type === 'DirectionalLight');
+      directionalLight && directionalLight.position.set(1, 1, 1); // change light position to see the specularMap's effect
+
+      world.controls().autoRotate = true;
+      world.controls().autoRotateSpeed = 1.0;
+    }).catch(error => {
+      console.error('Error loading countries:', error);
+    });
+  </script>
+  <script src="dashboards-utils.js"></script>
+  <script src="./script.js"></script>
+  <script src="./notification.js"></script>
+
+</body>
