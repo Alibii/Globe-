@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard with Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+    <div class="dashboard">
+        <h1>Interactive Dashboard with Map</h1>
+
+        <!-- Map Section -->
+        <svg id="map" width="800" height="600"></svg>
+
+        <!-- Widgets Section -->
+        <div class="widgets">
+            <!-- Total Sales -->
+            <div class="card">
+                <h2>Total Sales</h2>
+                <div id="totalSales">Loading...</div>
+            </div>
+
+            <!-- Error Distribution -->
+            <div class="card">
+                <h2>Errors by Clients</h2>
+                <div class="chart-container">
+                    <canvas id="errorChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Sales Trends -->
+            <div class="card">
+                <h2>Sales Trends</h2>
+                <div class="chart-container">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Sellers -->
+            <div class="card">
+                <h2>Top Sellers</h2>
+                <div class="chart-container">
+                    <canvas id="topSellersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

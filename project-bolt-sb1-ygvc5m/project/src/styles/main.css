@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "map widgets";
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+h1 {
+    grid-area: header;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#map {
+    grid-area: map;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+}
+
+.widgets {
+    grid-area: widgets;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.chart-container {
+    position: relative;
+    height: 200px;
+}
+
+canvas {
+    max-width: 100%;
+}
+
+.toggle {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.toggle button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toggle button.active {
+    background: #0056b3;
+}

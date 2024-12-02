@@ -1,0 +1,20 @@
+{
+  "name": "dashboard-map",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "chart.js": "^4.4.0",
+    "gsap": "^3.12.2",
+    "@turf/turf": "^6.5.0"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  }
+}
