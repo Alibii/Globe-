@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта Казахстана</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+</head>
+<body>
+    <svg id="map" width="800" height="600" style="border: 1px solid #ccc;"></svg>
+
+    <script>
+        const width = 800;
+        const height = 600;
+
+        const svg = d3.select("#map");
+
+        // Проекция карты
+        const projection = d3.geoMercator()
+            .scale(1000) // Масштаб карты
+            .center([67, 48]) // Центр Казахстана
+            .translate([width / 2, height / 2]);
+
+        const path = d3.geoPath().projection(projection);
+
+    // Загрузка GeoJSON
+        d3.json('./data/kazakhstan-regions.json').then(data => {
+
+        const region1 = data.features.find(f => f.properties.name === "Ulytau");
+        const region2 = data.features.find(f => f.properties.name === "Karaganda");
+
+        const mergedRegion = turf.union(region1, region2);
+
+        console.log("Объединенный регион:", mergedRegion);
+
+        
+
+            // Отображение регионов
+            svg.selectAll("path")
+        .data(data.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", "#69b3a2")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 0.5)
+        .on("mouseover", function(event, d) {
+            d3.select(this)
+                .attr("fill", "#ffcc00")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 1); // Подсветка при наведении
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this)
+                .attr("fill", "#69b3a2")
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 0.5); // Возврат стиля
+        });
+
+    // Добавление названий регионов
+    svg.selectAll("text")
+        .data(data.features)
+        .enter()
+        .append("text")
+        .attr("x", d => path.centroid(d)[0]) // Центр региона
+        .attr("y", d => path.centroid(d)[1])
+        .attr("text-anchor", "middle")
+        .attr("font-size", "10px")
+        .attr("fill", "#fff")
+        .text(d => d.properties.name); // Название региона
+}).catch(error => {
+    console.error("Ошибка загрузки GeoJSON:", error);
+});
+
+    </script>
+</body>
+</html>

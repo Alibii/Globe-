@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.2/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        .toggle {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .toggle button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .toggle button.active {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Dashboard</h1>
+
+        <!-- Total Sales Section -->
+        <div class="card">
+            <h2>Total Sales</h2>
+            <div id="totalSales">Loading...</div>
+        </div>
+
+        <!-- Error Distribution by Clients -->
+        <div class="card">
+            <h2>Errors by Clients</h2>
+            <div class="chart-container">
+                <canvas id="errorChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Sales Trends -->
+        <div class="card">
+            <h2>Sales Trends (Daily & Monthly)</h2>
+            <div class="chart-container">
+                <canvas id="salesTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Sellers -->
+        <div class="card">
+            <h2>Top Sellers</h2>
+            <div class="chart-container">
+                <canvas id="topSellersChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Toggle Between Day and Month View -->
+        <div class="toggle">
+            <button id="dayButton" class="active">Day View</button>
+            <button id="monthButton">Month View</button>
+        </div>
+    </div>
+
+    <script>
+        // Animate Total Sales Counter
+        function animateCounter(elementId, start, end, duration) {
+            const element = document.getElementById(elementId);
+            const increment = (end - start) / (duration / 1000 * 60);
+            let current = start;
+            const interval = setInterval(() => {
+                current += increment;
+                element.innerHTML = `&dollar;${current.toFixed(2)}`;
+                if (current >= end) {
+                    clearInterval(interval);
+                    element.innerHTML = `&dollar;${end.toFixed(2)}`;
+                }
+            }, 16);
+        }
+
+        animateCounter('totalSales', 0, 1234567.89, 3000);
+
+        // Error Chart
+        const errorCtx = document.getElementById('errorChart').getContext('2d');
+        new Chart(errorCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Client A', 'Client B', 'Client C'],
+                datasets: [{
+                    data: [10, 15, 5],
+                    backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+        // Sales Trend Chart
+        const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+        new Chart(salesTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Current Sales',
+                        data: [120, 150, 180, 200, 220, 190, 210],
+                        borderColor: '#007bff',
+                        fill: false
+                    },
+                    {
+                        label: 'Average Sales',
+                        data: [100, 130, 150, 170, 190, 180, 200],
+                        borderColor: '#28a745',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000
+                }
+            }
+        });
+
+        // Top Sellers Chart
+        const topSellersCtx = document.getElementById('topSellersChart').getContext('2d');
+        new Chart(topSellersCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Seller A', 'Seller B', 'Seller C'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [5000, 7000, 4000],
+                    backgroundColor: ['#ffc107', '#007bff', '#28a745']
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000
+                }
+            }
+        });
+
+        // Toggle View Buttons
+        document.getElementById('dayButton').addEventListener('click', () => {
+            alert('Day view selected!');
+        });
+        document.getElementById('monthButton').addEventListener('click', () => {
+            alert('Month view selected!');
+        });
+    </script>
+</body>
+</html>

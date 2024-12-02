@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #map {
+            height: 400px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .toggle-switch {
+            text-align: center;
+        }
+        .toggle-switch input {
+            display: none;
+        }
+        .toggle-switch label {
+            cursor: pointer;
+            background-color: #ccc;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .toggle-switch input:checked + label {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Total Sales -->
+        <h2 style="text-align: center;">Total Sales: <span id="total-sales">₸0</span></h2>
+
+        <!-- Line Chart -->
+        <canvas id="sales-chart"></canvas>
+
+        <!-- Pie Chart -->
+        <canvas id="errors-chart"></canvas>
+
+        <!-- Toggle Switch -->
+        <div class="toggle-switch">
+            <input type="checkbox" id="toggle-view">
+            <label for="toggle-view">Switch to Monthly View</label>
+        </div>
+
+        <!-- Map -->
+        <div id="map"></div>
+    </div>
+
+    <script>
+        // Simulated Data
+        const salesData = [200, 300, 400, 500, 600];
+        const errorData = [50, 30, 20];
+
+        // Total Sales Animation
+        let totalSales = 0;
+        const targetSales = 2000; // Example total
+        const salesElement = document.getElementById('total-sales');
+        const interval = setInterval(() => {
+            totalSales += 100;
+            salesElement.textContent = `₸${totalSales}`;
+            if (totalSales >= targetSales) clearInterval(interval);
+        }, 100);
+
+        // Sales Chart (Line Chart)
+        const salesCtx = document.getElementById('sales-chart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                datasets: [{
+                    label: 'Daily Sales',
+                    data: salesData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Errors Chart (Pie Chart)
+        const errorsCtx = document.getElementById('errors-chart').getContext('2d');
+        new Chart(errorsCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Client A', 'Client B', 'Client C'],
+                datasets: [{
+                    data: errorData,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Map Initialization
+        const map = L.map('map').setView([48.0196, 66.9237], 5); // Centered on Kazakhstan
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Adding some markers
+        const cities = [
+            { name: 'Almaty', coords: [43.2383, 76.9455] },
+            { name: 'Astana', coords: [51.1694, 71.4491] },
+            { name: 'Shymkent', coords: [42.3417, 69.5901] }
+        ];
+        cities.forEach(city => {
+            L.marker(city.coords).addTo(map)
+                .bindPopup(`<b>${city.name}</b><br>Sales: ₸${Math.floor(Math.random() * 1000)}`);
+        });
+    </script>
+</body>
+</html>
