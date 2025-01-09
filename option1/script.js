@@ -44,7 +44,7 @@ function calculate(operator) {
       operation = `${num1} ÷ ${num2} = ${result}`;
       break;
     case '%':
-      result = num1 % num2;
+      result = (num1 / 100) * num2;
       operation = `${num1} % ${num2} = ${result}`;
       break;
     default:
