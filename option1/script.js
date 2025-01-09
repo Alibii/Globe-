@@ -5,7 +5,7 @@ const addButton = document.getElementById('add');
 const subtractButton = document.getElementById('subtract');
 const multiplyButton = document.getElementById('multiply');
 const divideButton = document.getElementById('divide');
-const modButton = document.querySelector('.buttons button:nth-child(5)');
+const modButton = document.getElementById('percent');
 const historyList = document.getElementById('history-list');
 const clearHistoryButton = document.querySelector('.clear-history');
 
